@@ -1,0 +1,507 @@
+swagger: "2.0"
+info:
+  title: RENTv
+  description: APIs for RENTv services
+  version: 1.0.0
+host: localhost:8000
+basePath: /api
+schemes:
+  - http
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: "Bearer <token>"
+
+paths:
+  /AgentDetails:
+    post:
+      tags:
+        - "agentdetails"
+      summary: "create agentdetails"
+      description: "create agentdetails"
+      x-swagger-router-controller: Agentcontroller
+      operationId: createagentcontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: payload
+          required: true
+          schema:
+            $ref: "#/definitions/Agent"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    get:
+      tags:
+        - "agentdetails"
+      summary: "Get agentdetails"
+      description: "Retrieve agent details by username"
+      security:
+        - BearerAuth: []
+      x-swagger-router-controller: Agentcontroller
+      operationId: getagentcontroller
+      
+      produces:
+        - "application/json"
+      parameters:
+        - name: username
+          in: query
+          description: Username of the agent
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Agent"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - "agentdetails"
+      summary: "delete agentdetails"
+      description: "delete agentdetails"
+      security:
+        - BearerAuth: []
+      x-swagger-router-controller: Agentcontroller
+      operationId: deleteagentcontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: username
+          description: Username
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    put:
+      tags:
+        - "agentdetails"
+      summary: "put agentdetails"
+      description: "Update agent details"
+      x-swagger-router-controller: Agentcontroller
+      operationId: putagentcontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: username
+          description: Username
+          required: true
+          type: string
+        - in: body
+          name: payload
+          description: Agent update details
+          required: true
+          schema:
+            $ref: "#/definitions/Agent"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /agent/login:
+    post:
+      tags:
+        - "agentdetails"
+      summary: "Agent Login"
+      description: "Authenticate agent and return a JWT token"
+      x-swagger-router-controller: Agentcontroller
+      operationId: loginagentcontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: credentials
+          description: Agent login credentials
+          required: true
+          schema:
+            $ref: "#/definitions/Login"
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              token:
+                type: string
+              agent:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+        "400":
+          description: Invalid credentials
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /UserDetails:
+    post:
+      tags:
+        - "userdetails"
+      summary: "Create userdetails"
+      description: "Create userdetails"
+      x-swagger-router-controller: Usercontroller
+      operationId: createusercontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: User payload
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    get:
+      tags:
+        - "userdetails"
+      summary: "get userdetails"
+      description: "get userdetails"
+      security:
+        - BearerAuth: []
+      x-swagger-router-controller: Usercontroller
+      operationId: getusercontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: username
+          description: User name
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - "userdetails"
+      summary: "delete userdetails"
+      description: "delete userdetails"
+      x-swagger-router-controller: Usercontroller
+      operationId: deleteusercontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: username
+          description: Username
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    put:
+      tags:
+        - "userdetails"
+      summary: "put userdetails"
+      description: "put userdetail"
+      x-swagger-router-controller: Usercontroller
+      operationId: putusercontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: username
+          description: Username
+          required: true
+          type: string
+        - in: body
+          name: payload
+          description: UserDetails
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /VehicleDetails:
+    post:
+      tags:
+        - "vehicledetails"
+      summary: "Create Vehicle"
+      description: "Add new vehicle details"
+      x-swagger-router-controller: Vehiclecontroller
+      operationId: createvehiclecontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: vehicleWithUser
+          description: Combined vehicle and user info
+          required: true
+          schema:
+            $ref: "#/definitions/VehicleWithUser"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    get:
+      tags:
+        - "vehicledetails"
+      summary: "Get Vehicle"
+      description: "Retrieve vehicle by id"
+      x-swagger-router-controller: Vehiclecontroller
+      operationId: getvehiclecontroller
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: vehic
+          description: VehicleId
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Vehicle"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    put:
+      tags:
+        - "vehicledetails"
+      summary: "Update Vehicle"
+      description: "Update vehicle details"
+      x-swagger-router-controller: Vehiclecontroller
+      operationId: putvehiclecontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: vehicleId
+          description: Vehicle Id
+          required: true
+          type: string
+        - in: body
+          name: payload
+          description: Vehicle update payload
+          required: true
+          schema:
+            $ref: "#/definitions/Vehicle"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - "vehicledetails"
+      summary: "Delete Vehicle"
+      description: "Delete vehicle by number plate"
+      x-swagger-router-controller: Vehiclecontroller
+      operationId: deletevehiclecontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: vehicleId
+          description: VehicleId
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+definitions:
+  Agent:
+    type: object
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      agencyName:
+        type: string
+      address:
+        type: string
+      licenseNumber:
+        type: string
+
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      address:
+        type: string
+      adharnumber:
+        type: string
+
+  Vehicle:
+    type: object
+    properties:
+      vehicleId:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+        enum: [2-wheeler, 4-wheeler]
+      model:
+        type: string
+      numberPlate:
+        type: string
+      available:
+        type: boolean
+        default: true
+      location:
+        type: string
+      rentPerDay:
+        type: number
+
+  VehicleWithUser:
+    type: object
+    properties:
+      username:
+        type: string
+      vehicle:
+        $ref: "#/definitions/Vehicle"
+
+  Login:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      data:
+        type: object
+    example:
+      code: 0
+      data: {"response": "api response Data"}
+
+  ErrorResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Agent Registration</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2 class="center-text">Agent Registration</h2>
+  <form id="registerForm">
+    <label>Username:</label><br />
+    <input type="text" name="username" required /><br />
+
+    <label>Email:</label><br />
+    <input type="email" name="email" required /><br />
+
+    <label>Password:</label><br />
+    <input type="password" name="password" id="password" required /><br />
+    <small>Password must contain 1 uppercase, 1 lowercase, 1 digit, 1 symbol, and be at least 8 characters</small></br>
+     
+
+    <label>Phone Number:</label><br />
+    <input type="text" name="phoneNumber" id="phoneNumber" required /><br />
+
+    <label>Agency Name:</label><br />
+    <input type="text" name="agencyName" required /><br />
+
+    <label>Address:</label><br />
+    <input type="text" name="address" required /><br />
+
+    <label>License Number:</label><br />
+    <input type="text" name="licenseNumber" required /><br /><br />
+
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const responseDiv = document.getElementById('response');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+      const passwordInput = document.getElementById("password");
+      const password = data.password;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+      if (!passwordRegex.test(password)) {
+        passwordInput.classList.add("error");
+        passwordInput.value = ""; // clear password
+        return;
+      }
+      else {
+                passwordInput.classList.remove("error");
+        }
+
+      // === Phone number validation ===
+      const phoneNumberInput=document.getElementById("phoneNumber");
+      const phone = data.phoneNumber;
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(phone)) {
+        phoneNumberInput.classList.add("error");
+        phoneNumberInput.value="";
+        
+        return;
+      }
+     else {
+                phoneNumberInput.classList.remove("error");
+        }
+
+      try {
+        const res = await fetch('http://localhost:8000/api/AgentDetails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        responseDiv.innerText = result.message || "Registered successfully!";
+        form.reset(); // Clears the form
+
+      } catch (err) {
+        responseDiv.innerText = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
