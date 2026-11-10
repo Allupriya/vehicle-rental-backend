@@ -1,7 +1,7 @@
 const {userSchema}=require("../../schema/users");
 const dbConnect=require("../../utils/connectionSetup");
 const mongoose=require("mongoose");
-
+ 
 const finduserservice=async (condition,dbURL="RENT-V")=>{
     try{
         console.log('entered into find user service with condition',condition);
@@ -43,9 +43,9 @@ const putuserservice=async(query,data,dbURL="RENT-V")=>{
         const updatefields=data
         console.log('data service put...,',username,updatefields);
         const conn=await dbConnect(dbURL);
-        const userdetails=await conn.model("User",agentSchema,"User").updateOne(
+        const userdetails=await conn.model("User",userSchema,"User").updateOne(
             username,{$set:updatefields});
-        console.log('done in the put srvice',userdetails);
+        console.log('done in the put service',userdetails);
         return userdetails;
     }catch(error){
         throw error;

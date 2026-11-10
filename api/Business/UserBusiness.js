@@ -1,27 +1,26 @@
     const {createuserservice,finduserservice,
         deleteuserservice,putuserservice}=require("../Service/Userservice");
 
-
+    const bcrypt = require("bcrypt");
     const createuserbusiness=async (payload,query)=>{
         try{
             console.log('entere into business ')
             let { username, password, email } = payload;
-        const dbpayload = {
-        ...payload,
-        role:"User"
-        };
-        console.log(`dbPayload || ${JSON.stringify(dbpayload)}`);
-        const getuser = await finduserservice({
-        username
+            const getuser = await finduserservice({
+            username
         });
-        console.log('create bussiness getuser',getuser)
-        console.log('create bussiness dbpayload',dbpayload)
         if (getuser) {
         console.log('in th get provider....');
         return getuser.username === username
             ? "Username already exists"
             : "Email already exists"
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const dbpayload = {
+            ...payload,
+            password: hashedPassword,
+            role: "User"
+        };
         const userDetails = await createuserservice(dbpayload);
         console.log('completed create bussiness',userDetails);
         return userDetails;

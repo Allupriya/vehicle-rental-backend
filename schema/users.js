@@ -44,5 +44,47 @@
         timestamps: true
     }
     )
+    const bookingSchema = new Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        },
 
-    module.exports={agentSchema,userSchema,vehicleSchema};
+        vehicleId: {
+            type: String,
+            required: true
+        },
+
+        pickupDate: {
+            type: Date,
+            required: true
+        },
+
+        returnDate: {
+            type: Date,
+            required: true
+        },
+
+        totalAmount: {
+            type: Number,
+            required: true
+        },
+
+        status: {
+            type: String,
+            enum: ["Pending", "Confirmed", "Cancelled"],
+            default: "Confirmed"
+        }
+    },
+    {
+        timestamps: true
+    }
+    );
+
+module.exports = {
+    agentSchema,
+    userSchema,
+    vehicleSchema,
+    bookingSchema
+};

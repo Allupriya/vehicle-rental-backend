@@ -34,12 +34,18 @@ const options={
 app.get("/api/healthcheck",async(req,res)=>{
     return res.status(200).send({msg:"everthing works fine"})
 })
+
 // app.use(verifylogintoken);
 swagger.initializeMiddleware(swaggerDoc, (middleware) => {
     app.use(middleware.swaggerMetadata());
     app.use(middleware.swaggerValidator());
   
     // Dynamically route requests
+    
+    app.use((req, res, next) => {
+    console.log("Reached before JWT:", req.originalUrl);
+    next();
+    });
     app.use(verifylogintoken);
     app.use(middleware.swaggerRouter(options));
   

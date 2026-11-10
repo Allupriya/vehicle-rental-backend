@@ -294,6 +294,39 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /user/login:
+    post:
+      tags:
+        - "userdetails"
+      summary: "User Login"
+      description: "Authenticate user and return a JWT token"
+      x-swagger-router-controller: Usercontroller
+      operationId: userlogincontroller
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: credentials
+          description: User login credentials
+          required: true
+          schema:
+            $ref: "#/definitions/UserLogin"
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              token:
+                type: string
+        "400":
+          description: Invalid credentials
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /VehicleDetails:
     post:
@@ -408,7 +441,70 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-
+  
+  /Booking:
+    post:
+      tags:
+        - "booking"
+      summary: "Create Vehicle Booking"
+      description: "Book an available vehicle"
+      x-swagger-router-controller: Bookingcontroller
+      operationId: createbookingcontroller
+      security:
+        - BearerAuth: []
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: booking
+          description: Vehicle booking details
+          required: true
+          schema:
+            type: object
+            required:
+              - vehicleId
+              - pickupDate
+              - returnDate
+            properties:
+              vehicleId:
+                type: string
+              pickupDate:
+                type: string
+                format: date-time
+              returnDate:
+                type: string
+                format: date-time
+      responses:
+        "201":
+          description: Booking created successfully
+        "400":
+          description: Invalid booking details
+        "401":
+          description: Unauthorized
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      tags:
+        - "booking"
+      summary: "Get My Bookings"
+      description: "Retrieve bookings for the logged-in user"
+      x-swagger-router-controller: Bookingcontroller
+      operationId: getuserbookingscontroller
+      security:
+        - BearerAuth: []
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: Bookings retrieved successfully
+        "401":
+          description: Unauthorized
+        "500":
+          description: Failed to retrieve bookings
 definitions:
   Agent:
     type: object
@@ -475,7 +571,17 @@ definitions:
         type: string
       vehicle:
         $ref: "#/definitions/Vehicle"
-
+  
+  UserLogin:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
   Login:
     type: object
     required:
